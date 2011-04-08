@@ -1,6 +1,6 @@
 * My Emacs Config
 
-Simply clone this repo into ~/.emacs.d
+Simply clone this repo into ~/.emacs.d:
 
 #+BEGIN_SRC shell-script
 git clone git@github.com:bobby/emacs.d.git ~/.emacs.d
