@@ -6,6 +6,8 @@ Simply clone this repo into ~/.emacs.d:
 git clone git@github.com:bobby/emacs.d.git ~/.emacs.d
 #+END_SRC
 
-Then start up Emacs, and watch whilst package.el and the non-ELPA packages are installed.
+Next, follow the [[https://github.com/dimitri/el-get#readme][lazy install]] instructions for [[https://github.com/dimitri/el-get][el-get]].
+
+Then (re)start Emacs, and watch whilst package.el and the non-ELPA packages are installed.
 
 Restart Emacs, and the ELPA packages will also be installed and configured.  Yay el-get!
