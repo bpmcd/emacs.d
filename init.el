@@ -16,6 +16,11 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(windmove-default-keybindings 'super)
+
+(global-set-key (kbd "s-}") 'next-buffer)
+(global-set-key (kbd "s-{") 'previous-buffer)
+
 (delete-selection-mode t)
 (scroll-bar-mode t)
 (tool-bar-mode -1)
@@ -27,6 +32,8 @@
 (tooltip-mode -1)
 (normal-erase-is-backspace-mode 1)
 (set-frame-font "Monaco-16")
+
+(server-start)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; PACKAGES ;;;;
@@ -60,7 +67,6 @@
                :type git
                :url "http://github.com/marick/Midje.git"
                :load-path "emacs"
-               :load "midje-mode.el"
                :features midje-mode
                :after (lambda () (add-hook 'clojure-mode-hook 'midje-mode)))
         (:name swank-clojure
@@ -68,9 +74,11 @@
         (:name textmate
                :type git
                :url "git://github.com/defunkt/textmate.el"
-               :load "textmate.el")))
+               :load "textmate.el"
+               :after (lambda () (textmate-mode)))))
 
 (el-get)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
+
