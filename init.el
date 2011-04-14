@@ -4,6 +4,32 @@
 
 (push "/usr/local/bin" exec-path)
 
+
+;;;;;;;;;;;;;;;;
+;;;; DEFUNS ;;;;
+;;;;;;;;;;;;;;;;
+
+(defun my-bell-function ()
+  (unless (memq this-command
+                '(isearch-abort abort-recursive-edit exit-minibuffer
+                                keyboard-quit mwheel-scroll down up next-line previous-line
+                                backward-char forward-char))
+    (ding)))
+
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun indent-buffer ()
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer."
+  (interactive)
+  (indent-buffer)
+  (untabify-buffer)  (delete-trailing-whitespace))
+
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
 ;;;;;;;;;;;;;;;;
@@ -36,14 +62,10 @@
 
 ;; Don't ring bell at top of buffer, when canceling minibuffer command, etc.
 ;; Source: http://stackoverflow.com/questions/324457/disable-carbon-emacs-scroll-beep/731660#731660
-(defun my-bell-function ()
-  (unless (memq this-command
-                '(isearch-abort abort-recursive-edit exit-minibuffer
-                                keyboard-quit mwheel-scroll down up next-line previous-line
-                                backward-char forward-char))
-    (ding)))
+
 (setq ring-bell-function 'my-bell-function)
 
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
 ;;;;;;;;;;;;;;;;;;
 ;;;; PACKAGES ;;;;
 ;;;;;;;;;;;;;;;;;;
@@ -76,11 +98,7 @@
                         (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
         (:name slime-repl :type elpa)
         (:name clojure-mode :type elpa)
-        (:name durendal
-               :type git
-               :url "https://github.com/technomancy/durendal.git"
-               :load "durendal.el"
-               :after (lambda () (durendal-enable)))
+        (:name durendal :after (lambda () (durendal-enable)))
         (:name midje-mode
                :type git
                :url "http://github.com/marick/Midje.git"
