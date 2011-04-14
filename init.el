@@ -32,8 +32,17 @@
 (tooltip-mode -1)
 (normal-erase-is-backspace-mode 1)
 (set-frame-font "Monaco-16")
-
 (server-start)
+
+;; Don't ring bell at top of buffer, when canceling minibuffer command, etc.
+;; Source: http://stackoverflow.com/questions/324457/disable-carbon-emacs-scroll-beep/731660#731660
+(defun my-bell-function ()
+  (unless (memq this-command
+                '(isearch-abort abort-recursive-edit exit-minibuffer
+                                keyboard-quit mwheel-scroll down up next-line previous-line
+                                backward-char forward-char))
+    (ding)))
+(setq ring-bell-function 'my-bell-function)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; PACKAGES ;;;;
@@ -60,9 +69,18 @@
         (:name magit
                :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
         (:name paredit
-               :after (lambda () (add-hook 'clojure-mode-hook 'paredit-mode)))
+               :after (lambda () 
+                        (add-hook 'clojure-mode-hook          (lambda () (paredit-mode +1)))
+                        (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
+                        (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
+                        (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
         (:name slime-repl :type elpa)
         (:name clojure-mode :type elpa)
+        (:name durendal
+               :type git
+               :url "https://github.com/technomancy/durendal.git"
+               :load "durendal.el"
+               :after (lambda () (durendal-enable)))
         (:name midje-mode
                :type git
                :url "http://github.com/marick/Midje.git"
