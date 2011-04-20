@@ -93,40 +93,37 @@
   "\\([^.].*?\\)-\\([0-9]+\\(?:[.][0-9]+\\|\\(?:pre\\|beta\\|alpha\\)[0-9]+\\)*\\)")
 
 (setq el-get-sources
-      '(el-get color-theme color-theme-twilight color-theme-zenburn elein
-        (:name package24
-               :after (lambda ()
-                        (add-to-list 'package-archives
-                                     '("marmalade" . "http://marmalade-repo.org/packages/")
-                                     t)))
-        (:name color-theme-zen-and-art
-               :after (lambda ()
-                        (setq color-theme-is-global t)
-                        (color-theme-zen-and-art)))
-        (:name magit
-               :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
-        (:name paredit
-               :after (lambda () 
-                        (add-hook 'clojure-mode-hook          (lambda () (paredit-mode +1)))
-                        (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
-                        (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-                        (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
-        (:name slime-repl :type elpa)
-        (:name clojure-mode :type elpa)
-        (:name durendal :after (lambda () (durendal-enable)))
-        (:name midje-mode
-               :type git
-               :url "http://github.com/marick/Midje.git"
-               :load-path "emacs"
-               :features midje-mode
-               :after (lambda () (add-hook 'clojure-mode-hook 'midje-mode)))
-        (:name swank-clojure
-               :after (lambda () (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
-        (:name textmate
-               :type git
-               :url "git://github.com/defunkt/textmate.el"
-               :load "textmate.el"
-               :after (lambda () (textmate-mode)))))
+      '(el-get color-theme color-theme-twilight color-theme-zenburn elein org-mode
+               (:name package24
+                      :after (lambda ()
+                               (add-to-list 'package-archives
+                                            '("marmalade" . "http://marmalade-repo.org/packages/")
+                                            t)))
+               (:name color-theme-zen-and-art
+                      :after (lambda ()
+                               (setq color-theme-is-global t)
+                               (color-theme-zen-and-art)))
+               (:name magit
+                      :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
+               (:name paredit
+                      :after (lambda ()
+                               (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
+                               (add-hook 'clojure-mode-hook          (lambda () (paredit-mode +1)))
+                               (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
+                               (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
+                               (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
+               (:name slime-repl :type elpa)
+               (:name clojure-mode :type elpa)
+               (:name durendal
+                      :load "durendal.el"
+                      :after (lambda () (durendal-enable)))
+               (:name swank-clojure
+                      :after (lambda () (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
+               (:name textmate
+                      :type git
+                      :url "git://github.com/defunkt/textmate.el"
+                      :load "textmate.el"
+                      :after (lambda () (textmate-mode)))))
 
 (el-get)
 
