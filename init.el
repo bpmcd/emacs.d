@@ -54,10 +54,13 @@
 (setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
 (setq inhibit-startup-message t)
-
+(setq inhibit-splash-screen t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (windmove-default-keybindings 'super)
+(setq windmove-wrap-around t)
+
+(global-auto-revert-mode 1)
 
 (global-set-key (kbd "s-}") 'next-buffer)
 (global-set-key (kbd "s-{") 'previous-buffer)
@@ -67,12 +70,24 @@
 (tool-bar-mode -1)
 (blink-cursor-mode t)
 (show-paren-mode t)
+(line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
+(global-hl-line-mode)
+
 (set-fringe-style -1)
 (tooltip-mode -1)
 (normal-erase-is-backspace-mode 1)
-(set-frame-font "Monaco-16")
+
+;; Mac OS X conditional preferences
+(unless (string-match "apple-darwin" system-configuration)
+  (menu-bar-mode -1)
+  (set-frame-font "Monospace-10"))
+
+(when (string-match "apple-darwin" system-configuration)
+  (setq mac-allow-anti-aliasing t)
+  (set-face-font 'default "Monaco-16"))
+
 (server-start)
 
 ;; Don't ring bell at top of buffer, when canceling minibuffer command, etc.
