@@ -4,7 +4,6 @@
 
 (push "/usr/local/bin" exec-path)
 
-
 ;;;;;;;;;;;;;;;;
 ;;;; EL-GET ;;;;
 ;;;;;;;;;;;;;;;;
@@ -116,7 +115,6 @@
                                             t)))
                (:name color-theme-zen-and-art
                       :after (lambda ()
-                               (setq color-theme-is-global t)
                                (color-theme-zen-and-art)))
                (:name magit
                       :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
