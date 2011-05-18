@@ -44,6 +44,25 @@
   (indent-buffer)
   (untabify-buffer)  (delete-trailing-whitespace))
 
+;; Cursor-style setting functions
+;; Hat-tip: https://github.com/candera/emacs
+(defun set-cursor-type (cursor)
+  "Modify the cursor to the specified type"
+  (interactive "sCursor type (bar, box, etc.): ")
+  (modify-frame-parameters 
+   (selected-frame) 
+   (list (cons 'cursor-type (intern cursor)))))
+
+(defun set-bar-cursor ()
+  "Change the cursor to a bar rather than the (default) box"
+  (interactive)
+  (set-cursor-type "bar"))
+
+(defun set-box-cursor ()
+  "Change the cursor to a box (the default style)"
+  (interactive)
+  (set-cursor-type "box"))
+
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
 ;;;;;;;;;;;;;;;;
@@ -66,17 +85,22 @@
 
 (delete-selection-mode t)
 (scroll-bar-mode t)
-(tool-bar-mode -1)
 (blink-cursor-mode t)
 (show-paren-mode t)
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
-(global-hl-line-mode)
+(global-hl-line-mode t)
+(unless window-system (setq linum-format "%d "))
 
+(tool-bar-mode -1)
 (set-fringe-style -1)
 (tooltip-mode -1)
-(normal-erase-is-backspace-mode 1)
+(if window-system (normal-erase-is-backspace-mode 1))
+
+
+(add-hook 'text-mode-hook (lambda () (longlines-mode t)))
+(set-bar-cursor)
 
 ;; Mac OS X conditional preferences
 (unless (string-match "apple-darwin" system-configuration)
@@ -107,7 +131,10 @@
   "\\([^.].*?\\)-\\([0-9]+\\(?:[.][0-9]+\\|\\(?:pre\\|beta\\|alpha\\)[0-9]+\\)*\\)")
 
 (setq el-get-sources
-      '(el-get color-theme color-theme-twilight color-theme-zenburn elein markdown-mode
+      '(el-get color-theme color-theme-twilight color-theme-zenburn elein
+               (:name markdown-mode
+                      :after (lambda ()
+                               (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
                (:name org-mode
                       :after (lambda ()
                                (add-hook 'org-mode-hook (lambda () (auto-fill-mode t)))))
