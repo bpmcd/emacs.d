@@ -3,6 +3,7 @@
 ;;;;;;;;;;;;;;;
 
 (push "/usr/local/bin" exec-path)
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
 ;;;;;;;;;;;;;;;;
 ;;;; EL-GET ;;;;
