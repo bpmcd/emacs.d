@@ -131,13 +131,15 @@
   "\\([^.].*?\\)-\\([0-9]+\\(?:[.][0-9]+\\|\\(?:pre\\|beta\\|alpha\\)[0-9]+\\)*\\)")
 
 (setq el-get-sources
-      '(el-get color-theme color-theme-twilight color-theme-zenburn elein
+      '(el-get color-theme color-theme-twilight color-theme-zenburn elein coffee-mode haml-mode sass-mode
                (:name markdown-mode
                       :after (lambda ()
                                (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
                (:name org-mode
                       :after (lambda ()
-                               (add-hook 'org-mode-hook (lambda () (auto-fill-mode t)))))
+                               (add-hook 'org-mode-hook (lambda ()
+                                                          (longlines-mode f)
+                                                          (auto-fill-mode t)))))
                (:name package24
                       :after (lambda ()
                                (add-to-list 'package-archives
