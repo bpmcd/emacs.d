@@ -18,8 +18,8 @@
      (eval-print-last-sexp))))
 
 (require 'el-get)
-
 ;;;;;;;;;;;;;;;;
+
 ;;;; DEFUNS ;;;;
 ;;;;;;;;;;;;;;;;
 
@@ -49,8 +49,8 @@
 (defun set-cursor-type (cursor)
   "Modify the cursor to the specified type"
   (interactive "sCursor type (bar, box, etc.): ")
-  (modify-frame-parameters 
-   (selected-frame) 
+  (modify-frame-parameters
+   (selected-frame)
    (list (cons 'cursor-type (intern cursor)))))
 
 (defun set-bar-cursor ()
@@ -119,51 +119,46 @@
 (setq ring-bell-function 'my-bell-function)
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+;;;;;;;;;;;;;;;;;;
+;;;; CUSTOM ;;;;;;
+;;;;;;;;;;;;;;;;;;
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 ;;;;;;;;;;;;;;;;;;
 ;;;; PACKAGES ;;;;
 ;;;;;;;;;;;;;;;;;;
 
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-(require 'el-get)
-
-;;; To make the latest package.el work with Emacs 23
-(defconst package-subdirectory-regexp
-  "\\([^.].*?\\)-\\([0-9]+\\(?:[.][0-9]+\\|\\(?:pre\\|beta\\|alpha\\)[0-9]+\\)*\\)")
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/")
+             t)
+(package-initialize)
 
 (setq el-get-sources
-      '(el-get color-theme color-theme-twilight color-theme-zenburn elein coffee-mode haml-mode sass-mode
+      '(el-get elein coffee-mode haml-mode sass-mode
                (:name markdown-mode
                       :after (lambda ()
                                (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
-               (:name org-mode
-                      :after (lambda ()
-                               (add-hook 'org-mode-hook (lambda ()
-                                                          (longlines-mode f)
-                                                          (auto-fill-mode t)))))
-               (:name package24
-                      :after (lambda ()
-                               (add-to-list 'package-archives
-                                            '("marmalade" . "http://marmalade-repo.org/packages/")
-                                            t)))
-               (:name color-theme-zen-and-art
-                      :after (lambda ()
-                               (color-theme-zen-and-art)))
+               (:name zenburn-theme
+                      :type git
+                      :url  "https://github.com/djcb/elisp.git"
+                      :load "themes/zenburn-theme.el")
                (:name magit
                       :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
                (:name paredit
                       :after (lambda ()
                                (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
-                               (add-hook 'clojure-mode-hook          (lambda () (paredit-mode +1)))
-                               (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
-                               (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-                               (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
-               (:name slime-repl :type elpa)
+                               (add-hook 'clojure-mode-hook             (lambda () (paredit-mode +1)))
+                               (add-hook 'emacs-lisp-mode-hook          (lambda () (paredit-mode +1)))
+                               (add-hook 'lisp-mode-hook                (lambda () (paredit-mode +1)))
+                               (add-hook 'lisp-interaction-mode-hook    (lambda () (paredit-mode +1)))))
                (:name clojure-mode :type elpa)
-               (:name durendal
-                      :load "durendal.el"
-                      :after (lambda () (durendal-enable)))
-               (:name swank-clojure
-                      :after (lambda () (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
+               (:name slime-repl :type elpa
+                      :after (lambda ()
+                               (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
                (:name textmate
                       :type git
                       :url "git://github.com/defunkt/textmate.el"
@@ -171,7 +166,3 @@
                       :after (lambda () (textmate-mode)))))
 
 (el-get)
-
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-
