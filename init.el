@@ -157,6 +157,7 @@
                                (add-hook 'lisp-mode-hook                (lambda () (paredit-mode +1)))
                                (add-hook 'lisp-interaction-mode-hook    (lambda () (paredit-mode +1)))))
                (:name clojure-mode :type elpa)
+               (:name clojure-test-mode :type elpa)
                (:name slime-repl :type elpa
                       :after (lambda ()
                                (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
