@@ -14,4 +14,4 @@
   ;; If there is more than one, they won't work right.
  '(hl-line ((t (:inherit nil :background "#212121"))))
  '(magit-diff-add ((((class color) (background dark)) (:foreground "green"))))
- '(magit-diff-del ((t (:inherit diff-removed :foreground "Red"))))))
+ '(magit-diff-del ((t (:inherit diff-removed :foreground "Red")))))
