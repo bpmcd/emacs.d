@@ -3,6 +3,7 @@
 ;;;;;;;;;;;;;;;
 
 (push "/usr/local/bin" exec-path)
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
 ;;;;;;;;;;;;;;;;
 ;;;; EL-GET ;;;;
@@ -47,8 +48,8 @@
 (defun set-cursor-type (cursor)
   "Modify the cursor to the specified type"
   (interactive "sCursor type (bar, box, etc.): ")
-  (modify-frame-parameters 
-   (selected-frame) 
+  (modify-frame-parameters
+   (selected-frame)
    (list (cons 'cursor-type (intern cursor)))))
 
 (defun set-bar-cursor ()
@@ -151,7 +152,7 @@
                       :after (lambda ()
                                (color-theme-zen-and-art)))
                (:name magit
-                      :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
+                      :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
                (:name paredit
                       :after (lambda ()
                                (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
@@ -160,6 +161,7 @@
                                (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
                                (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
                (:name clojure-mode :type elpa)
+               (:name clojure-test-mode :type elpa)
                (:name durendal
                       :load "durendal.el"
                       :after (lambda () (durendal-enable)))
