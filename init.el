@@ -148,7 +148,7 @@
                       :url  "https://github.com/djcb/elisp.git"
                       :load "themes/zenburn-theme.el")
                (:name magit
-                      :after (lambda () (global-set-key (kbd "C-x C-z") 'magit-status)))
+                      :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
                (:name paredit
                       :after (lambda ()
                                (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
@@ -158,9 +158,6 @@
                                (add-hook 'lisp-interaction-mode-hook    (lambda () (paredit-mode +1)))))
                (:name clojure-mode :type elpa)
                (:name clojure-test-mode :type elpa)
-               (:name slime-repl :type elpa
-                      :after (lambda ()
-                               (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
                (:name textmate
                       :type git
                       :url "git://github.com/defunkt/textmate.el"
