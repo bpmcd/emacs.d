@@ -17,8 +17,6 @@
      (end-of-buffer)
      (eval-print-last-sexp))))
 
-(require 'el-get)
-
 ;;;;;;;;;;;;;;;;
 ;;;; DEFUNS ;;;;
 ;;;;;;;;;;;;;;;;
@@ -98,7 +96,6 @@
 (tooltip-mode -1)
 (if window-system (normal-erase-is-backspace-mode 1))
 
-
 (add-hook 'text-mode-hook (lambda () (longlines-mode t)))
 (set-bar-cursor)
 
@@ -119,12 +116,17 @@
 (setq ring-bell-function 'my-bell-function)
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+;;;;;;;;;;;;;;;;;;
+;;;; CUSTOM ;;;;;;
+;;;;;;;;;;;;;;;;;;
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 ;;;;;;;;;;;;;;;;;;
 ;;;; PACKAGES ;;;;
 ;;;;;;;;;;;;;;;;;;
-
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-(require 'el-get)
 
 ;;; To make the latest package.el work with Emacs 23
 (defconst package-subdirectory-regexp
@@ -157,13 +159,10 @@
                                (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
                                (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
                                (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))))
-               (:name slime-repl :type elpa)
                (:name clojure-mode :type elpa)
                (:name durendal
                       :load "durendal.el"
                       :after (lambda () (durendal-enable)))
-               (:name swank-clojure
-                      :after (lambda () (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
                (:name textmate
                       :type git
                       :url "git://github.com/defunkt/textmate.el"
@@ -171,7 +170,4 @@
                       :after (lambda () (textmate-mode)))))
 
 (el-get)
-
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
