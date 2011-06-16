@@ -18,9 +18,7 @@
      (end-of-buffer)
      (eval-print-last-sexp))))
 
-(require 'el-get)
 ;;;;;;;;;;;;;;;;
-
 ;;;; DEFUNS ;;;;
 ;;;;;;;;;;;;;;;;
 
