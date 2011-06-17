@@ -12,7 +12,7 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil t)
-  (url-retrieve
+  (url-retrieve-synchronously
    "https://github.com/dimitri/el-get/raw/master/el-get-install.el"
    (lambda (s)
      (end-of-buffer)
@@ -41,7 +41,8 @@
   "Perform a bunch of operations on the whitespace content of a buffer."
   (interactive)
   (indent-buffer)
-  (untabify-buffer)  (delete-trailing-whitespace))
+  (untabify-buffer)
+  (delete-trailing-whitespace))
 
 ;; Cursor-style setting functions
 ;; Hat-tip: https://github.com/candera/emacs
@@ -89,7 +90,7 @@
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
-(global-hl-line-mode t)
+                                        ;(global-hl-line-mode t)
 (unless window-system (setq linum-format "%d "))
 
 (tool-bar-mode -1)
@@ -97,8 +98,8 @@
 (tooltip-mode -1)
 (if window-system (normal-erase-is-backspace-mode 1))
 
-
 (add-hook 'text-mode-hook (lambda () (longlines-mode t)))
+(add-hook 'org-mode-hook  (lambda () (longlines-mode nil)))
 (set-bar-cursor)
 
 ;; Mac OS X conditional preferences
@@ -141,10 +142,8 @@
                (:name markdown-mode
                       :after (lambda ()
                                (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
-               (:name zenburn-theme
-                      :type git
-                      :url  "https://github.com/djcb/elisp.git"
-                      :load "themes/zenburn-theme.el")
+               (:name color-theme-solarized
+                      :load "solarized-dark-theme.el")
                (:name magit
                       :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
                (:name paredit
@@ -154,7 +153,10 @@
                                (add-hook 'emacs-lisp-mode-hook          (lambda () (paredit-mode +1)))
                                (add-hook 'lisp-mode-hook                (lambda () (paredit-mode +1)))
                                (add-hook 'lisp-interaction-mode-hook    (lambda () (paredit-mode +1)))))
-               (:name clojure-mode :type elpa)
+               (:name clojure-mode
+                      :type elpa
+                      :after (lambda ()
+                               (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
                (:name clojure-test-mode :type elpa)
                (:name textmate
                       :type git
