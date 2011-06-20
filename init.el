@@ -6,19 +6,6 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
 ;;;;;;;;;;;;;;;;
-;;;; EL-GET ;;;;
-;;;;;;;;;;;;;;;;
-
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-(unless (require 'el-get nil t)
-  (url-retrieve-synchronously
-   "https://github.com/dimitri/el-get/raw/master/el-get-install.el"
-   (lambda (s)
-     (end-of-buffer)
-     (eval-print-last-sexp))))
-
-;;;;;;;;;;;;;;;;
 ;;;; DEFUNS ;;;;
 ;;;;;;;;;;;;;;;;
 
@@ -84,23 +71,24 @@
 (global-set-key (kbd "s-{") 'previous-buffer)
 
 (delete-selection-mode t)
-(scroll-bar-mode t)
 (blink-cursor-mode t)
 (show-paren-mode t)
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
-                                        ;(global-hl-line-mode t)
+
 (unless window-system (setq linum-format "%d "))
 
-(tool-bar-mode -1)
-(set-fringe-style -1)
-(tooltip-mode -1)
-(if window-system (normal-erase-is-backspace-mode 1))
+(when window-system
+  (tool-bar-mode -1)
+  (scroll-bar-mode t)
+  (normal-erase-is-backspace-mode 1)
+  (set-fringe-style -1)
+  (tooltip-mode -1)
+  (set-bar-cursor))
 
 (add-hook 'text-mode-hook (lambda () (longlines-mode t)))
 (add-hook 'org-mode-hook  (lambda () (longlines-mode nil)))
-(set-bar-cursor)
 
 ;; Mac OS X conditional preferences
 (unless (string-match "apple-darwin" system-configuration)
@@ -134,6 +122,20 @@
 ;;; To make the latest package.el work with Emacs 23
 (defconst package-subdirectory-regexp
   "\\([^.].*?\\)-\\([0-9]+\\(?:[.][0-9]+\\|\\(?:pre\\|beta\\|alpha\\)[0-9]+\\)*\\)")
+
+;;;;;;;;;;;;;;;;
+;;;; EL-GET ;;;;
+;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil t)
+  (let* ((installer-buffer (url-retrieve-synchronously
+                            "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
+    (save-excursion
+      (set-buffer installer-buffer)
+      (end-of-buffer)
+      (eval-print-last-sexp))))
 
 (setq el-get-sources
       '(el-get color-theme elein coffee-mode haml-mode sass-mode
