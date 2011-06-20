@@ -6,19 +6,6 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
 ;;;;;;;;;;;;;;;;
-;;;; EL-GET ;;;;
-;;;;;;;;;;;;;;;;
-
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-(unless (require 'el-get nil t)
-  (url-retrieve-synchronously
-   "https://github.com/dimitri/el-get/raw/master/el-get-install.el"
-   (lambda (s)
-     (end-of-buffer)
-     (eval-print-last-sexp))))
-
-;;;;;;;;;;;;;;;;
 ;;;; DEFUNS ;;;;
 ;;;;;;;;;;;;;;;;
 
@@ -136,6 +123,20 @@
              '("marmalade" . "http://marmalade-repo.org/packages/")
              t)
 (package-initialize)
+
+;;;;;;;;;;;;;;;;
+;;;; EL-GET ;;;;
+;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil t)
+  (let* ((installer-buffer (url-retrieve-synchronously
+                            "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
+    (save-excursion
+      (set-buffer installer-buffer)
+      (end-of-buffer)
+      (eval-print-last-sexp))))
 
 (setq el-get-sources
       '(el-get elein coffee-mode haml-mode sass-mode

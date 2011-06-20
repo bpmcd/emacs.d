@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cursor-in-non-selected-windows nil)
+ '(el-get-standard-packages (quote ("package" "el-get" "elein" "coffee-mode" "haml-mode" "sass-mode" "markdown-mode" "color-theme-solarized" "magit" "paredit" "clojure-mode" "clojure-test-mode" "textmate")))
  '(elein-lein "/usr/local/bin/lein")
  '(markdown-command "/usr/local/bin/markdown")
  '(sh-basic-offset 2)
