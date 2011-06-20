@@ -71,7 +71,6 @@
 (global-set-key (kbd "s-{") 'previous-buffer)
 
 (delete-selection-mode t)
-(scroll-bar-mode t)
 (blink-cursor-mode t)
 (show-paren-mode t)
 (line-number-mode t)
@@ -80,14 +79,16 @@
                                         ;(global-hl-line-mode t)
 (unless window-system (setq linum-format "%d "))
 
-(tool-bar-mode -1)
-(set-fringe-style -1)
-(tooltip-mode -1)
-(if window-system (normal-erase-is-backspace-mode 1))
+(when window-system
+  (tool-bar-mode -1)
+  (scroll-bar-mode t)
+  (normal-erase-is-backspace-mode 1)
+  (set-fringe-style -1)
+  (tooltip-mode -1)
+  (set-bar-cursor))
 
 (add-hook 'text-mode-hook (lambda () (longlines-mode t)))
 (add-hook 'org-mode-hook  (lambda () (longlines-mode nil)))
-(set-bar-cursor)
 
 ;; Mac OS X conditional preferences
 (unless (string-match "apple-darwin" system-configuration)
