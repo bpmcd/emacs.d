@@ -144,6 +144,10 @@
                (:name markdown-mode
                       :after (lambda ()
                                (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
+               (:name kpm-list
+                      :type git
+                      :url "https://github.com/KMahoney/kpm-list"
+                      :load "kpm-list.el")
                (:name color-theme-solarized
                       :load "solarized-dark-theme.el")
                (:name magit
