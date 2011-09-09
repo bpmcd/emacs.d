@@ -87,9 +87,6 @@
   (tooltip-mode -1)
   (set-bar-cursor))
 
-(add-hook 'text-mode-hook (lambda () (longlines-mode t)))
-(add-hook 'org-mode-hook  (lambda () (longlines-mode nil)))
-
 ;; Mac OS X conditional preferences
 (unless (string-match "apple-darwin" system-configuration)
   (menu-bar-mode -1)
@@ -97,7 +94,7 @@
 
 (when (string-match "apple-darwin" system-configuration)
   (setq mac-allow-anti-aliasing t)
-  (set-face-font 'default "Monaco-16"))
+  (set-face-font 'default "Anonymous Pro-20"))
 
 (server-start)
 
@@ -155,14 +152,20 @@
                (:name paredit
                       :after (lambda ()
                                (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
-                               (add-hook 'clojure-mode-hook             (lambda () (paredit-mode +1)))
-                               (add-hook 'emacs-lisp-mode-hook          (lambda () (paredit-mode +1)))
-                               (add-hook 'lisp-mode-hook                (lambda () (paredit-mode +1)))
-                               (add-hook 'lisp-interaction-mode-hook    (lambda () (paredit-mode +1)))))
+                               (let ((paredit-modes '(clojure
+                                                      emacs-lisp
+                                                      lisp
+                                                      lisp-interaction
+                                                      ielm
+                                                      scheme)))
+                                 (dolist (mode paredit-modes)
+                                   (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
+                                             (lambda () (paredit-mode +1)))))))
                (:name clojure-mode
                       :type elpa
                       :after (lambda ()
-                               (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)))
+                               (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
+                               (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))))
                (:name clojure-test-mode :type elpa)
                (:name textmate
                       :type git
