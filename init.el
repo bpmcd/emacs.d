@@ -104,6 +104,7 @@
 (setq ring-bell-function 'my-bell-function)
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
+(global-set-key (kbd "C-a") 'back-to-indentation)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; CUSTOM ;;;;;;
