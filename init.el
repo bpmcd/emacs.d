@@ -137,7 +137,7 @@
       (eval-print-last-sexp))))
 
 (setq el-get-sources
-      '(el-get elein coffee-mode haml-mode sass-mode
+      '(el-get elein coffee-mode haml-mode sass-mode color-theme
                (:name markdown-mode
                       :after (lambda ()
                                (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
@@ -146,7 +146,8 @@
                       :url "https://github.com/KMahoney/kpm-list"
                       :load "kpm-list.el")
                (:name color-theme-solarized
-                      :load "solarized-dark-theme.el")
+                      :after (lambda ()
+                               (color-theme-solarized-dark)))
                (:name magit
                       :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
                (:name paredit
