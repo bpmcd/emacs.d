@@ -105,6 +105,7 @@
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 (global-set-key (kbd "C-a") 'back-to-indentation)
+(global-set-key (kbd "M-m") 'move-beginning-of-line)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; CUSTOM ;;;;;;
@@ -138,41 +139,45 @@
       (eval-print-last-sexp))))
 
 (setq el-get-sources
-      '(el-get elein coffee-mode haml-mode sass-mode color-theme
-               (:name markdown-mode
-                      :after (lambda ()
-                               (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
-               (:name kpm-list
-                      :type git
-                      :url "https://github.com/KMahoney/kpm-list"
-                      :load "kpm-list.el")
-               (:name color-theme-solarized
-                      :after (lambda ()
-                               (color-theme-solarized-dark)))
-               (:name magit
-                      :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
-               (:name paredit
-                      :after (lambda ()
-                               (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
-                               (let ((paredit-modes '(clojure
-                                                      emacs-lisp
-                                                      lisp
-                                                      lisp-interaction
-                                                      ielm
-                                                      scheme)))
-                                 (dolist (mode paredit-modes)
-                                   (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
-                                             (lambda () (paredit-mode +1)))))))
-               (:name clojure-mode
-                      :type elpa
-                      :after (lambda ()
-                               (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
-                               (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))))
-               (:name clojure-test-mode :type elpa)
-               (:name textmate
-                      :type git
-                      :url "git://github.com/defunkt/textmate.el"
-                      :load "textmate.el"
-                      :after (lambda () (textmate-mode)))))
+      '((:name markdown-mode
+               :after (lambda ()
+                        (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
+        (:name kpm-list
+               :type git
+               :url "https://github.com/KMahoney/kpm-list"
+               :load "kpm-list.el")
+        (:name color-theme-solarized
+               :after (lambda ()
+                        (color-theme-solarized-dark)))
+        (:name magit
+               :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
+        (:name paredit
+               :after (lambda ()
+                        (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
+                        (let ((paredit-modes '(clojure
+                                               emacs-lisp
+                                               lisp
+                                               lisp-interaction
+                                               ielm
+                                               scheme)))
+                          (dolist (mode paredit-modes)
+                            (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
+                                      (lambda () (paredit-mode +1)))))))
+        (:name clojure-mode
+               :type elpa
+               :after (lambda ()
+                        (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
+                        (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))))
+        (:name clojure-test-mode :type elpa)
+        (:name textmate
+               :type git
+               :url "git://github.com/defunkt/textmate.el"
+               :load "textmate.el"
+               :after (lambda () (textmate-mode)))))
 
-(el-get)
+(setq my-packages
+      (append
+       '(el-get elein coffee-mode haml-mode sass-mode color-theme)
+       (mapcar 'el-get-source-name el-get-sources)))
+
+(el-get 'sync my-packages)
