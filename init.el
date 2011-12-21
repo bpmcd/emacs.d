@@ -76,6 +76,9 @@
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
+(setq-default show-trailing-whitespace t)
+(setq-default indicate-empty-lines t)
+
                                         ;(global-hl-line-mode t)
 (unless window-system (setq linum-format "%d "))
 
@@ -139,16 +142,13 @@
       (eval-print-last-sexp))))
 
 (setq el-get-sources
-      '((:name markdown-mode
-               :after (lambda ()
-                        (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))))
-        (:name kpm-list
+      '((:name kpm-list
                :type git
                :url "https://github.com/KMahoney/kpm-list"
                :load "kpm-list.el")
         (:name color-theme-solarized
                :after (lambda ()
-                        (color-theme-solarized-dark)))
+                        (color-theme-midnight)))
         (:name magit
                :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
         (:name paredit
@@ -177,7 +177,7 @@
 
 (setq my-packages
       (append
-       '(el-get elein coffee-mode haml-mode sass-mode color-theme)
+       '(el-get elein coffee-mode haml-mode sass-mode color-theme markdown-mode)
        (mapcar 'el-get-source-name el-get-sources)))
 
 (el-get 'sync my-packages)
