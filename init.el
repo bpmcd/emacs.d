@@ -50,6 +50,31 @@
   (interactive)
   (set-cursor-type "box"))
 
+(defun better-paredit-reindent-string (&optional argument)
+  "Reindent the definition that the point is on.
+If the point is in a string or a comment, fill the paragraph instead,
+ and with a prefix argument, justify as well."
+  (interactive "P")
+  (unless (paredit-in-string-p)
+    (error "Must be inside a string"))
+  (save-restriction
+    (save-excursion
+      (let* ((string-region (paredit-string-start+end-points))
+             (string-start (1+ (car string-region)))
+             (string-end (1- (cdr string-region)))
+             (string (buffer-substring-no-properties (1+ (car string-region))
+                                                     (1- (cdr string-region)))))
+        (delete-region string-start string-end)
+        (insert
+         (with-temp-buffer
+           (insert string)
+           (replace-regexp "^ +" "" nil (point-min) (point-max))
+           (replace-regexp "^" "  " nil (point-min) (point-max))
+           (delete-trailing-whitespace)
+           (mark-whole-buffer)
+           (fill-paragraph nil t)
+           (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
+
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
 ;;;;;;;;;;;;;;;;
@@ -76,10 +101,12 @@
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
+
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
 
-                                        ;(global-hl-line-mode t)
+;;(global-hl-line-mode t)
+
 (unless window-system (setq linum-format "%d "))
 
 (when window-system
@@ -88,16 +115,16 @@
   (normal-erase-is-backspace-mode 1)
   (set-fringe-style -1)
   (tooltip-mode -1)
-  (set-bar-cursor))
+  (set-bar-cursor)
 
-;; Mac OS X conditional preferences
-(unless (string-match "apple-darwin" system-configuration)
-  (menu-bar-mode -1)
-  (set-frame-font "Monospace-10"))
+  ;; Mac OS X conditional preferences
+  (unless (string-match "apple-darwin" system-configuration)
+    (menu-bar-mode -1)
+    (set-frame-font "Monospace-10"))
 
-(when (string-match "apple-darwin" system-configuration)
-  (setq mac-allow-anti-aliasing t)
-  (set-face-font 'default "Anonymous Pro-20"))
+  (when (string-match "apple-darwin" system-configuration)
+    (setq mac-allow-anti-aliasing t)
+    (set-face-font 'default "Anonymous Pro-20")))
 
 (server-start)
 
@@ -107,8 +134,6 @@
 (setq ring-bell-function 'my-bell-function)
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
-(global-set-key (kbd "C-a") 'back-to-indentation)
-(global-set-key (kbd "M-m") 'move-beginning-of-line)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; CUSTOM ;;;;;;
@@ -153,7 +178,14 @@
                :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
         (:name paredit
                :after (lambda ()
-                        (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
+                        (define-key paredit-mode-map (kbd "M-)")
+                          'paredit-forward-slurp-sexp)
+                        (define-key paredit-mode-map (kbd "C-c q")
+                          'better-paredit-reindent-string)
+                        (define-key paredit-mode-map (kbd "C-a")
+                          'back-to-indentation)
+                        (define-key paredit-mode-map (kbd "M-m")
+                          'move-beginning-of-line)
                         (let ((paredit-modes '(clojure
                                                emacs-lisp
                                                lisp
