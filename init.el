@@ -50,6 +50,31 @@
   (interactive)
   (set-cursor-type "box"))
 
+(defun better-paredit-reindent-string (&optional argument)
+  "Reindent the definition that the point is on.
+If the point is in a string or a comment, fill the paragraph instead,
+ and with a prefix argument, justify as well."
+  (interactive "P")
+  (unless (paredit-in-string-p)
+    (error "Must be inside a string"))
+  (save-restriction
+    (save-excursion
+      (let* ((string-region (paredit-string-start+end-points))
+             (string-start (1+ (car string-region)))
+             (string-end (1- (cdr string-region)))
+             (string (buffer-substring-no-properties (1+ (car string-region))
+                                                     (1- (cdr string-region)))))
+        (delete-region string-start string-end)
+        (insert
+         (with-temp-buffer
+           (insert string)
+           (replace-regexp "^ +" "" nil (point-min) (point-max))
+           (replace-regexp "^" "  " nil (point-min) (point-max))
+           (delete-trailing-whitespace)
+           (mark-whole-buffer)
+           (fill-paragraph nil t)
+           (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
+
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
 ;;;;;;;;;;;;;;;;
