@@ -114,16 +114,16 @@ If the point is in a string or a comment, fill the paragraph instead,
   (normal-erase-is-backspace-mode 1)
   (set-fringe-style -1)
   (tooltip-mode -1)
-  (set-bar-cursor))
+  (set-bar-cursor)
 
-;; Mac OS X conditional preferences
-(unless (string-match "apple-darwin" system-configuration)
-  (menu-bar-mode -1)
-  (set-frame-font "Monospace-10"))
+  ;; Mac OS X conditional preferences
+  (unless (string-match "apple-darwin" system-configuration)
+    (menu-bar-mode -1)
+    (set-frame-font "Monospace-10"))
 
-(when (string-match "apple-darwin" system-configuration)
-  (setq mac-allow-anti-aliasing t)
-  (set-face-font 'default "Anonymous Pro-20"))
+  (when (string-match "apple-darwin" system-configuration)
+    (setq mac-allow-anti-aliasing t)
+    (set-face-font 'default "Anonymous Pro-20")))
 
 (server-start)
 
