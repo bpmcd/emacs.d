@@ -101,7 +101,11 @@ If the point is in a string or a comment, fill the paragraph instead,
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
-                                        ;(global-hl-line-mode t)
+
+(setq-default show-trailing-whitespace t)
+(setq-default indicate-empty-lines t)
+
+;;(global-hl-line-mode t)
 (unless window-system (setq linum-format "%d "))
 
 (when window-system
