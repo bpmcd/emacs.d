@@ -133,8 +133,6 @@ If the point is in a string or a comment, fill the paragraph instead,
 (setq ring-bell-function 'my-bell-function)
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
-(global-set-key (kbd "C-a") 'back-to-indentation)
-(global-set-key (kbd "M-m") 'move-beginning-of-line)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; CUSTOM ;;;;;;
@@ -182,7 +180,14 @@ If the point is in a string or a comment, fill the paragraph instead,
                :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
         (:name paredit
                :after (lambda ()
-                        (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
+                        (define-key paredit-mode-map (kbd "M-)")
+                          'paredit-forward-slurp-sexp)
+                        (define-key paredit-mode-map (kbd "C-c q")
+                          'better-paredit-reindent-string)
+                        (define-key paredit-mode-map (kbd "C-a")
+                          'back-to-indentation)
+                        (define-key paredit-mode-map (kbd "M-m")
+                          'move-beginning-of-line)
                         (let ((paredit-modes '(clojure
                                                emacs-lisp
                                                lisp
