@@ -7,6 +7,7 @@
  '(cursor-in-non-selected-windows nil)
  '(dired-listing-switches "-alh")
  '(elein-lein "/usr/local/bin/lein")
+ '(js-indent-level 2)
  '(list-directory-brief-switches "-CFh")
  '(list-directory-verbose-switches "-lh")
  '(markdown-command "/usr/local/bin/markdown")
