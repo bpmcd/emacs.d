@@ -101,6 +101,7 @@ If the point is in a string or a comment, fill the paragraph instead,
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
