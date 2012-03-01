@@ -174,7 +174,7 @@ If the point is in a string or a comment, fill the paragraph instead,
                :load "kpm-list.el")
         (:name color-theme-solarized
                :after (lambda ()
-                        (color-theme-midnight)))
+                        (color-theme-solarized-dark)))
         (:name magit
                :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
         (:name paredit
