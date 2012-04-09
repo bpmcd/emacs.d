@@ -14,7 +14,7 @@
                 '(isearch-abort abort-recursive-edit exit-minibuffer
                                 keyboard-quit mwheel-scroll down up next-line previous-line
                                 backward-char forward-char))
-    (ding)))
+          (ding)))
 
 (defun untabify-buffer ()
   (interactive)
@@ -52,28 +52,28 @@
 
 (defun better-paredit-reindent-string (&optional argument)
   "Reindent the definition that the point is on.
-If the point is in a string or a comment, fill the paragraph instead,
- and with a prefix argument, justify as well."
+  If the point is in a string or a comment, fill the paragraph instead,
+  and with a prefix argument, justify as well."
   (interactive "P")
   (unless (paredit-in-string-p)
-    (error "Must be inside a string"))
+          (error "Must be inside a string"))
   (save-restriction
-    (save-excursion
-      (let* ((string-region (paredit-string-start+end-points))
-             (string-start (1+ (car string-region)))
-             (string-end (1- (cdr string-region)))
-             (string (buffer-substring-no-properties (1+ (car string-region))
-                                                     (1- (cdr string-region)))))
-        (delete-region string-start string-end)
-        (insert
-         (with-temp-buffer
-           (insert string)
-           (replace-regexp "^ +" "" nil (point-min) (point-max))
-           (replace-regexp "^" "  " nil (point-min) (point-max))
-           (delete-trailing-whitespace)
-           (mark-whole-buffer)
-           (fill-paragraph nil t)
-           (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
+   (save-excursion
+    (let* ((string-region (paredit-string-start+end-points))
+           (string-start (1+ (car string-region)))
+           (string-end (1- (cdr string-region)))
+           (string (buffer-substring-no-properties (1+ (car string-region))
+                                                   (1- (cdr string-region)))))
+      (delete-region string-start string-end)
+      (insert
+       (with-temp-buffer
+        (insert string)
+        (replace-regexp "^ +" "" nil (point-min) (point-max))
+        (replace-regexp "^" "  " nil (point-min) (point-max))
+        (delete-trailing-whitespace)
+        (mark-whole-buffer)
+        (fill-paragraph nil t)
+        (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
 
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
@@ -111,21 +111,21 @@ If the point is in a string or a comment, fill the paragraph instead,
 (unless window-system (setq linum-format "%d "))
 
 (when window-system
-  (tool-bar-mode -1)
-  (scroll-bar-mode t)
-  (normal-erase-is-backspace-mode 1)
-  (set-fringe-style -1)
-  (tooltip-mode -1)
-  (set-bar-cursor)
+      (tool-bar-mode -1)
+      (scroll-bar-mode t)
+      (normal-erase-is-backspace-mode 1)
+      (set-fringe-style -1)
+      (tooltip-mode -1)
+      (set-bar-cursor)
 
-  ;; Mac OS X conditional preferences
-  (unless (string-match "apple-darwin" system-configuration)
-    (menu-bar-mode -1)
-    (set-frame-font "Monospace-10"))
+      ;; Mac OS X conditional preferences
+      (unless (string-match "apple-darwin" system-configuration)
+              (menu-bar-mode -1)
+              (set-frame-font "Monospace-10"))
 
-  (when (string-match "apple-darwin" system-configuration)
-    (setq mac-allow-anti-aliasing t)
-    (set-face-font 'default "Anonymous Pro-20")))
+      (when (string-match "apple-darwin" system-configuration)
+            (setq mac-allow-anti-aliasing t)
+            (set-face-font 'default "Anonymous Pro-20")))
 
 (server-start)
 
@@ -160,15 +160,31 @@ If the point is in a string or a comment, fill the paragraph instead,
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil t)
-  (let* ((installer-buffer (url-retrieve-synchronously
-                            "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
-    (save-excursion
-      (set-buffer installer-buffer)
-      (end-of-buffer)
-      (eval-print-last-sexp))))
+        (let* ((installer-buffer (url-retrieve-synchronously
+                                  "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
+          (save-excursion
+           (set-buffer installer-buffer)
+           (end-of-buffer)
+           (eval-print-last-sexp))))
+
 
 (setq el-get-sources
-      '((:name kpm-list
+      '((:name ruby-mode
+               :after (lambda ()
+                        (autoload 'ruby-mode "ruby-mode" nil t)
+                        (add-to-list 'auto-mode-alist '("Capfile" . ruby-mode))
+                        (add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
+                        (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
+                        (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+                        (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+                        (add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
+                        (add-hook 'ruby-mode-hook '(lambda ()
+                                                     (setq ruby-deep-arglist t)
+                                                     (setq ruby-deep-indent-paren nil)
+                                                     (setq c-tab-always-indent nil)
+                                                     (require 'inf-ruby)
+                                                     (require 'ruby-compilation)))))
+        (:name kpm-list
                :type git
                :url "https://github.com/KMahoney/kpm-list"
                :load "kpm-list.el")
@@ -194,14 +210,18 @@ If the point is in a string or a comment, fill the paragraph instead,
                                                ielm
                                                scheme)))
                           (dolist (mode paredit-modes)
-                            (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
-                                      (lambda () (paredit-mode +1)))))))
+                                  (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
+                                            (lambda () (paredit-mode +1)))))))
         (:name clojure-mode
-               :type elpa
                :after (lambda ()
                         (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
-                        (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))))
+                        (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
+                        (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))))
         (:name clojure-test-mode :type elpa)
+        (:name gambit-mode
+               :type git
+               :url "https://github.com/feeley/gambit.git"
+               :load "misc/gambit.el")
         (:name textmate
                :type git
                :url "git://github.com/defunkt/textmate.el"
@@ -210,7 +230,7 @@ If the point is in a string or a comment, fill the paragraph instead,
 
 (setq my-packages
       (append
-       '(el-get elein coffee-mode haml-mode sass-mode color-theme markdown-mode ruby-block ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
+       '(el-get elein coffee-mode haml-mode sass-mode color-theme markdown-mode ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
        (mapcar 'el-get-source-name el-get-sources)))
 
 (el-get 'sync my-packages)
