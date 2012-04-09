@@ -215,18 +215,11 @@
         (:name clojure-mode
                :after (lambda ()
                         (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
-                        (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
                         (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))))
-        (:name clojure-test-mode :type elpa)
         (:name gambit-mode
                :type git
                :url "https://github.com/feeley/gambit.git"
-               :load "misc/gambit.el")
-        (:name textmate
-               :type git
-               :url "git://github.com/defunkt/textmate.el"
-               :load "textmate.el"
-               :after (lambda () (textmate-mode)))))
+               :load "misc/gambit.el")))
 
 (setq my-packages
       (append
