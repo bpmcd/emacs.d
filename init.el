@@ -3,7 +3,8 @@
 ;;;;;;;;;;;;;;;
 
 (push "/usr/local/bin" exec-path)
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(push "/Users/bobby/local/bin" exec-path)
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/Users/bobby/local/bin"))
 
 ;;;;;;;;;;;;;;;;
 ;;;; DEFUNS ;;;;
@@ -14,7 +15,7 @@
                 '(isearch-abort abort-recursive-edit exit-minibuffer
                                 keyboard-quit mwheel-scroll down up next-line previous-line
                                 backward-char forward-char))
-          (ding)))
+    (ding)))
 
 (defun untabify-buffer ()
   (interactive)
@@ -56,24 +57,24 @@
   and with a prefix argument, justify as well."
   (interactive "P")
   (unless (paredit-in-string-p)
-          (error "Must be inside a string"))
+    (error "Must be inside a string"))
   (save-restriction
-   (save-excursion
-    (let* ((string-region (paredit-string-start+end-points))
-           (string-start (1+ (car string-region)))
-           (string-end (1- (cdr string-region)))
-           (string (buffer-substring-no-properties (1+ (car string-region))
-                                                   (1- (cdr string-region)))))
-      (delete-region string-start string-end)
-      (insert
-       (with-temp-buffer
-        (insert string)
-        (replace-regexp "^ +" "" nil (point-min) (point-max))
-        (replace-regexp "^" "  " nil (point-min) (point-max))
-        (delete-trailing-whitespace)
-        (mark-whole-buffer)
-        (fill-paragraph nil t)
-        (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
+    (save-excursion
+      (let* ((string-region (paredit-string-start+end-points))
+             (string-start (1+ (car string-region)))
+             (string-end (1- (cdr string-region)))
+             (string (buffer-substring-no-properties (1+ (car string-region))
+                                                     (1- (cdr string-region)))))
+        (delete-region string-start string-end)
+        (insert
+         (with-temp-buffer
+           (insert string)
+           (replace-regexp "^ +" "" nil (point-min) (point-max))
+           (replace-regexp "^" "  " nil (point-min) (point-max))
+           (delete-trailing-whitespace)
+           (mark-whole-buffer)
+           (fill-paragraph nil t)
+           (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
 
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
@@ -101,6 +102,7 @@
 (line-number-mode t)
 (column-number-mode t)
 (global-linum-mode t)
+(ido-mode t)
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
 (setq-default show-trailing-whitespace t)
@@ -111,21 +113,21 @@
 (unless window-system (setq linum-format "%d "))
 
 (when window-system
-      (tool-bar-mode -1)
-      (scroll-bar-mode t)
-      (normal-erase-is-backspace-mode 1)
-      (set-fringe-style -1)
-      (tooltip-mode -1)
-      (set-bar-cursor)
+  (tool-bar-mode -1)
+  (scroll-bar-mode t)
+  (normal-erase-is-backspace-mode 1)
+  (set-fringe-style -1)
+  (tooltip-mode -1)
+  (set-bar-cursor)
 
-      ;; Mac OS X conditional preferences
-      (unless (string-match "apple-darwin" system-configuration)
-              (menu-bar-mode -1)
-              (set-frame-font "Monospace-10"))
+  ;; Mac OS X conditional preferences
+  (unless (string-match "apple-darwin" system-configuration)
+    (menu-bar-mode -1)
+    (set-frame-font "Monospace-10"))
 
-      (when (string-match "apple-darwin" system-configuration)
-            (setq mac-allow-anti-aliasing t)
-            (set-face-font 'default "Anonymous Pro-20")))
+  (when (string-match "apple-darwin" system-configuration)
+    (setq mac-allow-anti-aliasing t)
+    (set-face-font 'default "Anonymous Pro-20")))
 
 (server-start)
 
@@ -148,9 +150,8 @@
 ;;;;;;;;;;;;;;;;;;
 
 (require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/")
-             t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("tromey" . "http://tromey.com/elpa/") t)
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;
@@ -160,12 +161,12 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil t)
-        (let* ((installer-buffer (url-retrieve-synchronously
-                                  "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
-          (save-excursion
-           (set-buffer installer-buffer)
-           (end-of-buffer)
-           (eval-print-last-sexp))))
+  (let* ((installer-buffer (url-retrieve-synchronously
+                            "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
+    (save-excursion
+      (set-buffer installer-buffer)
+      (end-of-buffer)
+      (eval-print-last-sexp))))
 
 
 (setq el-get-sources
@@ -210,8 +211,8 @@
                                                ielm
                                                scheme)))
                           (dolist (mode paredit-modes)
-                                  (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
-                                            (lambda () (paredit-mode +1)))))))
+                            (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
+                                      (lambda () (paredit-mode +1)))))))
         (:name clojure-mode
                :after (lambda ()
                         (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
