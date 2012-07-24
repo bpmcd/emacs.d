@@ -15,7 +15,7 @@
                 '(isearch-abort abort-recursive-edit exit-minibuffer
                                 keyboard-quit mwheel-scroll down up next-line previous-line
                                 backward-char forward-char))
-    (ding)))
+          (ding)))
 
 (defun untabify-buffer ()
   (interactive)
@@ -50,31 +50,6 @@
   "Change the cursor to a box (the default style)"
   (interactive)
   (set-cursor-type "box"))
-
-(defun better-paredit-reindent-string (&optional argument)
-  "Reindent the definition that the point is on.
-  If the point is in a string or a comment, fill the paragraph instead,
-  and with a prefix argument, justify as well."
-  (interactive "P")
-  (unless (paredit-in-string-p)
-    (error "Must be inside a string"))
-  (save-restriction
-    (save-excursion
-      (let* ((string-region (paredit-string-start+end-points))
-             (string-start (1+ (car string-region)))
-             (string-end (1- (cdr string-region)))
-             (string (buffer-substring-no-properties (1+ (car string-region))
-                                                     (1- (cdr string-region)))))
-        (delete-region string-start string-end)
-        (insert
-         (with-temp-buffer
-           (insert string)
-           (replace-regexp "^ +" "" nil (point-min) (point-max))
-           (replace-regexp "^" "  " nil (point-min) (point-max))
-           (delete-trailing-whitespace)
-           (mark-whole-buffer)
-           (fill-paragraph nil t)
-           (buffer-substring-no-properties (+ 2 (point-min)) (point-max))))))))
 
 ;;;;;;;;;;;;;;;;
 ;;;; PREFS ;;;;;
@@ -113,21 +88,21 @@
 (unless window-system (setq linum-format "%d "))
 
 (when window-system
-  (tool-bar-mode -1)
-  (scroll-bar-mode t)
-  (normal-erase-is-backspace-mode 1)
-  (set-fringe-style -1)
-  (tooltip-mode -1)
-  (set-bar-cursor)
+      (tool-bar-mode -1)
+      (scroll-bar-mode t)
+      (normal-erase-is-backspace-mode 1)
+      (set-fringe-style -1)
+      (tooltip-mode -1)
+      (set-bar-cursor)
 
-  ;; Mac OS X conditional preferences
-  (unless (string-match "apple-darwin" system-configuration)
-    (menu-bar-mode -1)
-    (set-frame-font "Monospace-10"))
+      ;; Mac OS X conditional preferences
+      (unless (string-match "apple-darwin" system-configuration)
+              (menu-bar-mode -1)
+              (set-frame-font "Monospace-10"))
 
-  (when (string-match "apple-darwin" system-configuration)
-    (setq mac-allow-anti-aliasing t)
-    (set-face-font 'default "Anonymous Pro-20")))
+      (when (string-match "apple-darwin" system-configuration)
+            (setq mac-allow-anti-aliasing t)
+            (set-face-font 'default "Anonymous Pro-20")))
 
 (server-start)
 
@@ -161,12 +136,12 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil t)
-  (let* ((installer-buffer (url-retrieve-synchronously
-                            "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
-    (save-excursion
-      (set-buffer installer-buffer)
-      (end-of-buffer)
-      (eval-print-last-sexp))))
+        (let* ((installer-buffer (url-retrieve-synchronously
+                                  "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
+          (save-excursion
+           (set-buffer installer-buffer)
+           (end-of-buffer)
+           (eval-print-last-sexp))))
 
 
 (setq el-get-sources
@@ -189,6 +164,13 @@
                :type git
                :url "https://github.com/KMahoney/kpm-list"
                :load "kpm-list.el")
+        (:name align-cljlet
+               :type git
+               :url "https://github.com/gstamp/align-cljlet.git"
+               :load "align-cljlet.el"
+               :after (lambda ()
+                        (define-key clojure-mode-map (kbd "C-c |")
+                          'align-cljlet)))
         (:name color-theme-solarized
                :after (lambda ()
                         (color-theme-solarized-dark)))
@@ -198,8 +180,6 @@
                :after (lambda ()
                         (define-key paredit-mode-map (kbd "M-)")
                           'paredit-forward-slurp-sexp)
-                        (define-key paredit-mode-map (kbd "C-c q")
-                          'better-paredit-reindent-string)
                         (define-key paredit-mode-map (kbd "C-a")
                           'back-to-indentation)
                         (define-key paredit-mode-map (kbd "M-m")
@@ -211,12 +191,13 @@
                                                ielm
                                                scheme)))
                           (dolist (mode paredit-modes)
-                            (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
-                                      (lambda () (paredit-mode +1)))))))
+                                  (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
+                                            (lambda () (paredit-mode +1)))))))
         (:name clojure-mode
                :after (lambda ()
                         (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
-                        (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))))
+                        (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))
+                        (set-variable 'inferior-lisp-program "lein repl")))
         (:name gambit-mode
                :type git
                :url "https://github.com/feeley/gambit.git"
