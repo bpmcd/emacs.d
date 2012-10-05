@@ -120,110 +120,47 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-;;;;;;;;;;;;;;;;;;
-;;;; PACKAGES ;;;;
-;;;;;;;;;;;;;;;;;;
-
-(require 'package)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("tromey" . "http://tromey.com/elpa/") t)
-(package-initialize)
-
 ;;;;;;;;;;;;;;;;
 ;;;; EL-GET ;;;;
 ;;;;;;;;;;;;;;;;
 
+(setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil t)
-        (let* ((installer-buffer (url-retrieve-synchronously
-                                  "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
-          (save-excursion
-           (set-buffer installer-buffer)
-           (end-of-buffer)
+        (url-retrieve
+         "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
+         (lambda (s)
+           (goto-char (point-max))
            (eval-print-last-sexp))))
 
-
 (setq el-get-sources
-      '((:name ruby-mode
-               :after (lambda ()
-                        (autoload 'ruby-mode "ruby-mode" nil t)
-                        (add-to-list 'auto-mode-alist '("Capfile" . ruby-mode))
-                        (add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
-                        (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
-                        (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
-                        (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-                        (add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
-                        (add-hook 'ruby-mode-hook '(lambda ()
-                                                     (setq ruby-deep-arglist t)
-                                                     (setq ruby-deep-indent-paren nil)
-                                                     (setq c-tab-always-indent nil)
-                                                     (require 'inf-ruby)
-                                                     (require 'ruby-compilation)))))
-        (:name kpm-list
-               :type git
-               :url "https://github.com/KMahoney/kpm-list"
-               :load "kpm-list.el")
-        (:name color-theme-solarized
-               :after (lambda ()
-                        (color-theme-solarized-dark)))
+      '((:name color-theme-solarized
+               :after (color-theme-solarized-dark))
         (:name magit
-               :after (lambda () (global-set-key (kbd "C-x m") 'magit-status)))
-        (:name paredit
-               :after (lambda ()
-                        (define-key paredit-mode-map (kbd "M-)")
-                          'paredit-forward-slurp-sexp)
-                        (define-key paredit-mode-map (kbd "C-a")
-                          'back-to-indentation)
-                        (define-key paredit-mode-map (kbd "M-m")
-                          'move-beginning-of-line)
-                        (let ((paredit-modes '(clojure
-                                               emacs-lisp
-                                               lisp
-                                               lisp-interaction
-                                               ielm
-                                               scheme)))
-                          (dolist (mode paredit-modes)
-                                  (add-hook (intern (concat (symbol-name mode) "-mode-hook"))
-                                            (lambda () (paredit-mode +1)))))))
-        (:name clojure-mode
-               :after (lambda ()
-                        (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
-                        (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))
-                        (set-variable 'inferior-lisp-program "lein repl")
-                        (add-hook 'clojure-mode-hook
-                                  (lambda ()
-                                    (define-clojure-indent
-                                      (defroutes 'defun)
-                                      (GET 2)
-                                      (POST 2)
-                                      (PUT 2)
-                                      (DELETE 2)
-                                      (HEAD 2)
-                                      (ANY 2)
-                                      (context 2))))))
-        (:name nrepl
-               :description "An Emacs client for nREPL, the Clojure networked REPL server."
-               :type git
-               :url "https://github.com/kingtim/nrepl.el"
-               :load "nrepl.el")
+               :after (global-set-key (kbd "C-x m") 'magit-status))
         (:name align-cljlet
-               :type git
-               :url "https://github.com/gstamp/align-cljlet.git"
-               :load "align-cljlet.el"
-               :after (lambda ()
-                        (add-hook 'clojure-mode-hook
-                                  (lambda ()
-                                    (define-key clojure-mode-map (kbd "C-c |")
-                                      'align-cljlet)))))
+               :type github
+               :pkgname "gstamp/align-cljlet"
+               :depends clojure-mode
+               :features align-cljlet
+               :after (add-hook 'clojure-mode-hook
+                                (define-key clojure-mode-map (kbd "C-c |")
+                                  'align-cljlet)))
+        (:name nrepl
+               :depends clojure-mode)
         (:name gambit-mode
-               :type git
-               :url "https://github.com/feeley/gambit.git"
+               :type github
+               :pkgname "feeley/gambit"
                :load "misc/gambit.el")))
 
 (setq my-packages
       (append
-       '(el-get coffee-mode haml-mode sass-mode color-theme markdown-mode ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
+       '(el-get coffee-mode
+                paredit clojure-mode nrepl
+                haml-mode sass-mode
+                color-theme markdown-mode kpm-list
+                ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
        (mapcar 'el-get-source-name el-get-sources)))
 
 (el-get 'sync my-packages)
