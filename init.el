@@ -150,12 +150,12 @@
 
 (setq my-packages
       (append
-       '(el-get coffee-mode
-                paredit clojure-mode nrepl
-                haml-mode sass-mode
-                color-theme color-theme-solarized kpm-list magit
-                markdown-mode
-                ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
+       '(coffee-mode
+         paredit clojure-mode
+         haml-mode sass-mode
+         color-theme color-theme-solarized kpm-list magit
+         markdown-mode
+         ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
        (mapcar 'el-get-source-name el-get-sources)))
 
 (el-get 'sync my-packages)

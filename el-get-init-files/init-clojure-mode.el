@@ -1,17 +1,17 @@
 (print "initializing clojure-mode...")
 (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))
 (set-variable 'inferior-lisp-program "lein repl")
-(add-hook 'clojure-mode-hook
-          (lambda ()
-            (print "fixing clojure indentation...")
-            (define-clojure-indent
-              (defroutes 'defun)
-              (GET 2)
-              (POST 2)
-              (PUT 2)
-              (DELETE 2)
-              (HEAD 2)
-              (ANY 2)
-              (context 2))
-            (print "...finished fixing clojure indentation")))
+
+(require 'clojure-mode)
+
+(define-clojure-indent
+  (defroutes 'defun)
+  (GET 2)
+  (POST 2)
+  (PUT 2)
+  (DELETE 2)
+  (HEAD 2)
+  (ANY 2)
+  (context 2))
+
 (print "...finished initializing clojure-mode")
