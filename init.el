@@ -128,25 +128,19 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil 'noerror)
-    (with-current-buffer
-            (url-retrieve-synchronously
-                     "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-                (goto-char (point-max))
-                    (eval-print-last-sexp)))
+        (with-current-buffer
+         (url-retrieve-synchronously
+          "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+         (goto-char (point-max))
+         (eval-print-last-sexp)))
 
 (setq el-get-sources
-      '((:name color-theme-solarized
-               :after (color-theme-solarized-dark))
-        (:name magit
-               :after (global-set-key (kbd "C-x m") 'magit-status))
-        (:name align-cljlet
+      '((:name align-cljlet
                :type github
-               :pkgname "gstamp/align-cljlet"
-               :depends clojure-mode
-               :features align-cljlet
-               :after (add-hook 'clojure-mode-hook
-                                (define-key clojure-mode-map (kbd "C-c |")
-                                  'align-cljlet)))
+               :pkgname  "gstamp/align-cljlet"
+               :depends  clojure-mode
+               :load     "align-cljlet.el"
+               :features align-cljlet)
         (:name nrepl
                :depends clojure-mode)
         (:name gambit-mode
@@ -159,7 +153,8 @@
        '(el-get coffee-mode
                 paredit clojure-mode nrepl
                 haml-mode sass-mode
-                color-theme markdown-mode kpm-list
+                color-theme color-theme-solarized kpm-list magit
+                markdown-mode
                 ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
        (mapcar 'el-get-source-name el-get-sources)))
 
