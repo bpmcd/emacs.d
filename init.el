@@ -154,7 +154,7 @@
          paredit clojure-mode
          haml-mode sass-mode
          color-theme color-theme-solarized kpm-list magit
-         markdown-mode
+         markdown-mode textile-mode
          ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
        (mapcar 'el-get-source-name el-get-sources)))
 
