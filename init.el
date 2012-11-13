@@ -124,6 +124,9 @@
 ;;;; EL-GET ;;;;
 ;;;;;;;;;;;;;;;;
 
+(require 'package)
+(package-initialize)
+
 (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
@@ -150,12 +153,13 @@
 
 (setq my-packages
       (append
-       '(coffee-mode
+       '(el-get
          paredit clojure-mode
          haml-mode sass-mode
          color-theme color-theme-solarized kpm-list magit
          markdown-mode textile-mode
-         ruby-end rvm rhtml-mode yaml-mode inf-ruby ruby-compilation)
+         coffee-mode
+         ruby-mode inf-ruby ruby-compilation rhtml-mode yaml-mode ruby-end)
        (mapcar 'el-get-source-name el-get-sources)))
 
 (el-get 'sync my-packages)
