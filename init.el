@@ -145,7 +145,7 @@
                :load     "align-cljlet.el"
                :features align-cljlet)
         (:name nrepl
-               :depends clojure-mode)
+               :depends (clojure-mode paredit))
         (:name gambit-mode
                :type github
                :pkgname "feeley/gambit"
@@ -153,13 +153,12 @@
 
 (setq my-packages
       (append
-       '(el-get
-         paredit clojure-mode
-         haml-mode sass-mode
-         color-theme color-theme-solarized kpm-list magit
-         markdown-mode textile-mode
-         coffee-mode
-         ruby-mode inf-ruby ruby-compilation rhtml-mode yaml-mode ruby-end)
+       '(paredit clojure-mode
+                 haml-mode sass-mode
+                 color-theme color-theme-solarized kpm-list magit
+                 markdown-mode textile-mode
+                 coffee-mode
+                 ruby-mode inf-ruby ruby-compilation rhtml-mode yaml-mode ruby-end)
        (mapcar 'el-get-source-name el-get-sources)))
 
 (el-get 'sync my-packages)
