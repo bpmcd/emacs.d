@@ -1,5 +1,5 @@
-(print "initializing clojure-mode...")
 (add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljx\\'" . clojure-mode))
 (set-variable 'inferior-lisp-program "lein repl")
 
 (require 'clojure-mode)
@@ -13,5 +13,3 @@
   (HEAD 2)
   (ANY 2)
   (context 2))
-
-(print "...finished initializing clojure-mode")
