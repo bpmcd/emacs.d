@@ -12,6 +12,7 @@
  '(list-directory-brief-switches "-CFh")
  '(list-directory-verbose-switches "-lh")
  '(markdown-command "/usr/local/bin/markdown")
+ '(org-src-fontify-natively t)
  '(sh-basic-offset 2)
  '(sh-indentation 2))
 (custom-set-faces
