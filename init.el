@@ -146,6 +146,9 @@
                :features align-cljlet)
         (:name nrepl
                :depends (clojure-mode paredit))
+        (:name nrepl-ritz
+               :type elpa
+               :depends (nrepl))
         (:name gambit-mode
                :type github
                :pkgname "feeley/gambit"
