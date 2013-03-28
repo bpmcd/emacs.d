@@ -1,4 +1,4 @@
-(add-to-list 'auto-mode-alist '("\\.dtm$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.cljx\\'" . clojure-mode))
 (set-variable 'inferior-lisp-program "lein repl")
 
