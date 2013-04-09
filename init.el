@@ -145,7 +145,7 @@
                :load     "align-cljlet.el"
                :features align-cljlet)
         (:name nrepl
-               :depends (clojure-mode paredit))
+               :depends clojure-mode)
         (:name nrepl-ritz
                :type elpa
                :depends (nrepl))
