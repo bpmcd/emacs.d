@@ -148,7 +148,7 @@
                :depends clojure-mode)
         (:name nrepl-ritz
                :type elpa
-               :depends (nrepl))
+               :depends nrepl)
         (:name gambit-mode
                :type github
                :pkgname "feeley/gambit"
