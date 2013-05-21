@@ -102,7 +102,7 @@
 
       (when (string-match "apple-darwin" system-configuration)
             (setq mac-allow-anti-aliasing t)
-            (set-face-font 'default "Anonymous Pro-20")))
+            (set-face-font 'default "Inconsolata-20")))
 
 (server-start)
 
